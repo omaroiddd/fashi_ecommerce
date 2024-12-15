@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Site;
 
-use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
-use App\Models\Order;
-use App\Models\Coupon;
-use App\Models\Address;
-use App\Models\Product;
-use App\Models\OrderItem;
-use App\Models\Transaction;
-use Illuminate\Http\Request;
+use App\Events\OrderPlacedEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Address;
+use App\Models\Coupon;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\Transaction;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Surfsidemedia\Shoppingcart\Facades\Cart;
 
@@ -255,6 +256,7 @@ class CartController extends Controller
         $order->payment_status = 'pending'; // Payment pending status
         $order->save();
 
+
         // Step 7: Save order items (using a loop or better, an Eloquent relationship)
         $orderItems = Cart::instance('cart')->content()->map(function ($item) use ($order) {
             return [
@@ -335,6 +337,8 @@ class CartController extends Controller
                 // Update order with Stripe session ID
                 $order->stripe_session_id = $checkout_session->id;
                 $order->save();
+
+                event(new OrderPlacedEvent($order));
 
                 // Clear cart and session data
                 Cart::instance('cart')->destroy();

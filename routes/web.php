@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +24,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 // require_once 'admin.php';
+
+
+
 
 Auth::routes();
 Route::as('site.')->group(function(){

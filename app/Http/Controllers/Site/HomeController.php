@@ -27,14 +27,15 @@ class HomeController extends Controller
         $productsMen =
             Product::with(['brand', 'category', 'tags'])
             ->whereHas('category', function ($query) use ($categories) {
-                $query->where('name', 'men');
-            })->paginate(12);
+                $query->where('name', 'mens');
+            })->paginate(3);
         $productsWomen =
             Product::with(['brand', 'category', 'tags'])
             ->whereHas('category', function ($query) use ($categories) {
-                $query->where('name', 'women');
-            })->paginate(12);
+                $query->where('name', 'womens');
+            })->paginate(3);
         return view('site.pages.home', compact('categories', 'brands', 'tags', 'productsMen', 'productsWomen','facebook','youtube','instagram','twitter'));
+
     }
 
     public function inCorrectRole()
